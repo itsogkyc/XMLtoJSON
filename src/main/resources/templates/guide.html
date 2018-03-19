@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<!-- 합쳐지고 최소화된 최신 CSS -->
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+<!-- 부가적인 테마 -->
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css">
+<!-- 합쳐지고 최소화된 최신 자바스크립트 -->
+<script
+	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+<meta charset="UTF-8">
+<title>GUIDE</title>
+
+<style>
+textarea {
+	width: 250px;
+	height: 250px;
+}
+</style>
+
+</head>
+<body>
+	<div class="navbar navbar-default">
+		<div class="container">
+			<div class="navbar-header">
+				<button class="navbar-toggle" type="button" data-toggle="collapse"
+					data-target="#navbar-main">
+					<span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="#">Converting between XML and JSON</a>
+			</div>
+		</div>
+	</div>
+			
+	<div class="container">
+	<table width="900" class="table table-bordered">
+			<tr>
+				<td width="47%" class="active">
+					<b>XML</b><br>
+					<textarea id="input-xml" class="form-control col-sm-5" rows="20" style="width:100%"></textarea>
+				</td>
+				<td width="6%" class="active" style="vertical-align:middle">
+					<button type="button" id="convert-xml-to-json" style="width:100%"> &gt;&gt; </button><br><br>
+					<button type="button" id="convert-json-to-xml" style="width:100%"> &lt;&lt; </button>
+				</td>
+				<td width="47%" class="active" >
+					<b>JSON</b><br>
+					<textarea id="input-json" class="form-control col-sm-5" rows="20" style="width:100%"></textarea>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="3">
+					<div id="checkValue"></div>
+				</td>
+			</tr>
+			</div>
+	</table>		
+	</div>
+	
+	
+</body>
+
+<script>
+	/* 	$("#id-xml-to-json").on("click", function() {
+	 $("#output-xml-to-json").empty();
+	 $("#xml-to-json").show();
+	 $("#json-to-xml").hide();
+	 });
+
+	 $("#id-json-to-xml").on("click", function() {
+	 $("#xml-to-json").hide();
+	 $("#output-json-to-xml").empty();
+	 $("#json-to-xml").show();
+	 }); */
+
+	//로컬 호스트
+	var url = "http://localhost:8085/";
+	 
+	//XML TO JSON 변환
+	var xml2json = function(_data) {
+		$.ajax({
+			type : "POST",
+			url : url + "xml2json",
+			data : _data,
+			contentType : "application/xml",
+			cache : false,
+			success : function(data) { //통신 성공시   
+				$("#input-json").val(JSON.stringify(data, null, 4));
+				$("#checkValue").html('<font color="blue">유효한 값입니다</font>');
+			},
+			error : function() { //잘못 된 값을 입력할시 
+				$("#input-json").val('');
+				$("#checkValue").html('<font color="red">유효하지 않은 값입니다</font>');
+			}
+		});
+	}
+	
+	//JSON TO XML 변환
+	var json2xml = function(_data) {
+		$.ajax({
+			type : "POST",
+			url : url + "json2xml",
+			data : _data,
+			contentType : "application/json",
+			cache : false,
+			success : function(data) {
+				var xmlText = new XMLSerializer().serializeToString(data);  //데이어 직렬화
+				alert(xmlText);
+				xmlText = xmlText.substring(6,xmlText.lastIndexOf("</DATA>"));  //JSON의 배열값을 처리하기 위해 넣은 DATA태그 삭제
+				xmlText = '<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n' + xmlText;  //xml 프롤로그 추가
+				//xmlText = xmlText.substring(0,38) + "\n" + xmlText.substring(38);	//TextArea에 올바른 형식으로 넣게 엔터값 입력
+				$("#input-xml").val(xmlText);
+			},
+			error : function() {
+				$("#input-xml").val("invalid json2xml error");
+			}
+		});
+	}
+
+	$("#convert-xml-to-json").on("click", function() {
+		var data = $("#input-xml").val();
+		if (!data) {
+			//실패등록			
+			data = "invalid data(xml to json)";
+		}
+		xml2json(data);
+	});
+
+	$("#convert-json-to-xml").on("click", function() {
+		var data = $("#input-json").val();
+		if (!data) {
+			//실패등록
+			data = "invalid data(json to xml)";
+		}
+		json2xml(data);
+	});
+</script>
+
+</html>
