@@ -76,8 +76,5 @@ public class RestAPIController {
 		return new ResponseEntity<String>(json, HttpStatus.OK);
 	}
 	
-	
-	
-	
 
 }
