@@ -1,17 +1,16 @@
 <!DOCTYPE html>
 <html>
 <head>
-<script
-	src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
+<script	src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <!-- 합쳐지고 최소화된 최신 CSS -->
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" 
 	integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">	
 <!-- 부가적인 테마 -->
-<link rel="stylesheet"
-	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css">
 <!-- 합쳐지고 최소화된 최신 자바스크립트 -->
-<script
-	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+<script 	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
 <meta charset="UTF-8">
 <title>GUIDE</title>
 
@@ -58,13 +57,16 @@ textarea {
 					<button type="button" id="displayControl" class="btn btn-outline-success" style="height:100%; width:100%">통계값 확인</button>
 					<div id="result" style="display:none">
 					</div>
+					
 				</td>
 			</tr>
+			
 	</table>		
-	
+				
 	</div>
 	
 </body>
+
 
 <script>
 
@@ -81,12 +83,12 @@ textarea {
 			cache : false,
 			success : function(data) { //통신 성공시   
 				$("#input-json").val(JSON.stringify(data, null, 4));
-				$("#checkValue").html('<font color="blue">유효한 값입니다</font>');
+				$("#checkValue").html('<font color="blue">유효한 값입니다</font>').fadeOut(function() { $("#checkValue").fadeIn(); });
 				saveResult("good_XMLtoJSON");
 			},
 			error : function() { //잘못 된 값을 입력할시 
 				$("#input-json").val('');
-				$("#checkValue").html('<font color="red">유효하지 않은 XML 값입니다</font>');
+				$("#checkValue").html('<font color="red">유효하지 않은 XML 값입니다</font>').fadeOut(function() { $("#checkValue").fadeIn(); });
 				saveResult("bad_XMLtoJSON");
 			}
 		});
@@ -106,11 +108,12 @@ textarea {
 				xmlText = '<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n' + xmlText;  //xml 프롤로그 추가
 				//xmlText = xmlText.substring(0,38) + "\n" + xmlText.substring(38);	//TextArea에 올바른 형식으로 넣게 엔터값 입력
 				$("#input-xml").val(xmlText);
+				$("#checkValue").html('<font color="blue">유효한 값입니다</font>').fadeOut(function() { $("#checkValue").fadeIn(); });
 				saveResult("good_JSONtoXML");
 			},
 			error : function() {
 				$("#input-xml").val('');
-				$("#checkValue").html('<font color="red">유효하지 않은 JSON 값입니다</font>');
+				$("#checkValue").html('<font color="red">유효하지 않은 JSON 값입니다</font>').fadeOut(function() { $("#checkValue").fadeIn(); });
 				saveResult("bad_JSONtoXML");
 			}
 		});
@@ -179,18 +182,16 @@ textarea {
 			bad_JSONtoXML = bad_JSONtoXML + 1;
 		}
 		
-		
 		//증가한 값 저장하기
 		var jsonValue = { "XMLtoJSON":{"success": good_XMLtoJSON ,"error": bad_XMLtoJSON},
 				        "JSONtoXML":{"success": good_JSONtoXML,"error": bad_JSONtoXML}};
-		
 		
 		localStorage.setItem('statisticsValue',JSON.stringify(jsonValue));
 		
 		$("#result").html("XML -> JSON : SUCCESS["+good_XMLtoJSON+"] FAIL["+bad_XMLtoJSON+"] <br> "+
 						  "JSON -> XML : SUCCESS["+good_JSONtoXML+"] FAIL["+bad_JSONtoXML+"]<br>"+
-						  "<button type='button' onClick='resetValue()' class='btn btn-outline-danger btn-sm' width='50dp'>초기화</button>");
-		
+						  "<button type='button' onClick='resetValue()' class='btn btn-outline-danger btn-sm' width='50dp'>초기화</button><br>" + 
+						  "<canvas id='myChart' style='width:100%'></canvas>");
 	}
 	
 	
@@ -200,12 +201,13 @@ textarea {
 		var con = document.getElementById("result");
 	    if(con.style.display=='none'){
 	        con.style.display = 'block';
+	        chartJs();
 	    }else{
 	        con.style.display = 'none';
 	    }
 	});
 	
-	
+	// 7. 통계값 저장
 	function resetValue(){
 		good_XMLtoJSON=0;
 		bad_XMLtoJSON=0;
@@ -216,16 +218,48 @@ textarea {
 		
 		$("#result").html("XML -> JSON : SUCCESS["+good_XMLtoJSON+"] FAIL["+bad_XMLtoJSON+"] <br> "+
 						  "JSON -> XML : SUCCESS["+good_JSONtoXML+"] FAIL["+bad_JSONtoXML+"]<br>"+
-						  "<button type='button' onClick='resetValue()' class='btn btn-outline-danger btn-sm' width='50dp'>초기화</button>");
+						  "<button type='button' onClick='resetValue()' class='btn btn-outline-danger btn-sm' width='50dp'>초기화</button>" + 
+						  "<canvas id='myChart' style='width:100%'></canvas>");
 	}
-	
 	
 	//통계결과값 출력
 	$("#result").html("XML -> JSON : SUCCESS["+good_XMLtoJSON+"] FAIL["+bad_XMLtoJSON+"] <br> "+
 			 		  "JSON -> XML : SUCCESS["+good_JSONtoXML+"] FAIL["+bad_JSONtoXML+"]<br>"+
-	        		  "<button type='button' onClick='resetValue()' class='btn btn-outline-danger btn-sm' width='50dp'>초기화</button>");
+	        		  "<button type='button' onClick='resetValue()' class='btn btn-outline-danger btn-sm' width='50dp'>초기화</button>" + 
+					  "<canvas id='myChart' style='width:100%'></canvas>");
 
 	
+	//8. 통계값 
+	
+</script>
+
+
+<script>
+
+function chartJs(){
+	var ctx = document.getElementById('myChart').getContext('2d');
+	var chart = new Chart(ctx, {
+	    // The type of chart we want to create
+	    type: 'line',
+
+	    // The data for our dataset
+	    data: {
+	        labels: ["January", "February", "March", "April", "May", "June", "July"],
+	        datasets: [{
+	            label: "My First dataset",
+	            backgroundColor: 'rgb(255, 99, 132)',
+	            borderColor: 'rgb(255, 99, 132)',
+	            data: [0, 10, 5, 2, 20, 30, 45],
+	        }]
+	    },
+
+	    // Configuration options go here
+	    options: {}
+	});
+}
+
+
+
 </script>
 
 </html>
