@@ -19,18 +19,19 @@
 
 textarea {
 	width: 250px;
-	height: 250px;
+	height: 320px;
 }
  
 .chart-container {
     width:450px;
-    height:300px
+    height:250px
 }
 
 .borderless td, .borderless th {
     border: none;
     text-align:center;
     font-size:14px;
+    padding:0;
 }
  
 </style>
@@ -44,21 +45,26 @@ textarea {
 			</div>
 		</div>
 	</div>
-	<br>		
 	<div class="container">
-	<table width="900" class="table table-bordered">
+	<table width="900" class="table table-bordered" style="margin-top:15px">
 			<tr>
 				<td width="47%" class="active" style="background-color:#F1F1F1;">
-					<b>XML</b><br>
-					<textarea id="input-xml" class="form-control" rows="50" style="width:100%; height:500px;" ></textarea>
+					<b>XML</b>
+					<div style="float: right; margin-left:10px"><button type='button' onClick='clearXmlConsole()' class='btn btn-outline-danger btn-sm' width='50dp'>CLEAR</button></div>
+					<div style="float: right;"><button type='button' onClick='testXmlValue()' class='btn btn-outline-danger btn-sm' width='50dp'>TEST CASE</button></div>
+					<br><br>
+					<textarea id="input-xml" class="form-control" rows="50" ></textarea>
 				</td>
 				<td width="6%" class="active" style="vertical-align:middle">
 					<button type="button" id="convert-xml-to-json" class="btn btn-success btn-md" > &gt;&gt; </button><br><br>
 					<button type="button" id="convert-json-to-xml" class="btn btn-success btn-md" > &lt;&lt; </button>
 				</td>
 				<td width="47%" class="active" style="background-color:#F1F1F1;">
-					<b>JSON</b><br>
-					<textarea id="input-json" class="form-control" rows="50" style="width:100%; height:500px" ></textarea>
+					<b>JSON</b>
+					<div style="float: right; margin-left:10px"><button type='button' onClick='clearJsonConsole()' class='btn btn-outline-danger btn-sm' width='50dp'>CLEAR</button></div>
+					<div style="float: right;"><button type='button' onClick='testJsonValue()' class='btn btn-outline-danger btn-sm' width='50dp'>TEST CASE</button></div>
+					<br><br>
+					<textarea id="input-json" class="form-control" rows="50"></textarea>
 				</td>
 			</tr>
 			<tr>
@@ -72,9 +78,9 @@ textarea {
 					<div id="result" style="display:none">
 						<table class="table borderless">
 							<tr>
-								<td width="47%">XML to JSON</td>
+								<td width="47%"><b>XML to JSON</b></td>
 								<td width="6%"></td>
-								<td width="47%">JSON to XML</td>
+								<td width="47%"><b>JSON to XML</b></td>
 							</tr>
 							<tr>
 								<td width="47%"><div id="XMLtoJSON_chartValue"></div></td>
@@ -82,6 +88,7 @@ textarea {
 								<td width="47%"><div id="JSONtoXML_chartValue"></div></td>
 							</tr>
 							<tr>
+								<br>
 								<td><div id='xmlChart' class='chart-container'><canvas id='XMLtoJSON_chart'></canvas></div></td>
 								<td></td>
 								<td><div id='jsonChart' class='chart-container'><canvas id='JSONtoXML_chart'></canvas></div></td>
@@ -123,7 +130,6 @@ textarea {
 				saveResult("good_XMLtoJSON");
 			},
 			error : function() { //잘못 된 값을 입력할시 
-				$("#input-json").val('');
 				$("#checkValue").html('<font color="red">유효하지 않은 XML 값입니다</font>')
 				  .fadeOut(function() { $("#checkValue").fadeIn(); });
 				saveResult("bad_XMLtoJSON");
@@ -141,16 +147,15 @@ textarea {
 			cache : false,
 			success : function(data) {
 				var xmlText = new XMLSerializer().serializeToString(data);  //데이어 직렬화
-				xmlText = xmlText.substring(6,xmlText.lastIndexOf("</DATA>"));  //JSON의 배열값을 처리하기 위해 넣은 DATA태그 삭제
+				//xmlText = xmlText.substring(6,xmlText.lastIndexOf("</DATA>"));  //JSON의 배열값을 처리하기 위해 넣은 DATA태그 삭제
 				xmlText = '<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n' + xmlText;  //xml 프롤로그 추가
-				//xmlText = xmlText.substring(0,38) + "\n" + xmlText.substring(38);	//TextArea에 올바른 형식으로 넣게 엔터값 입력
 				$("#input-xml").val(xmlText);
 				$("#checkValue").html('<font color="blue">유효한 값입니다</font>')
 				  .fadeOut(function(){ $("#checkValue").fadeIn(); });
 				saveResult("good_JSONtoXML");
+				
 			},
 			error : function() {
-				$("#input-xml").val('');
 				$("#checkValue").html('<font color="red">유효하지 않은 JSON 값입니다</font>')
 				  .fadeOut(function() { $("#checkValue").fadeIn(); });
 				saveResult("bad_JSONtoXML");
@@ -205,7 +210,6 @@ textarea {
 		good_JSONtoXML = output["JSONtoXML"].success * 1;
 		bad_JSONtoXML = output["JSONtoXML"].error * 1;
 	}
-	
 	
 	$(document).ready(function(){
 		$("#XMLtoJSON_chartValue").html("성공 : " + good_XMLtoJSON + " 실패 : " + bad_XMLtoJSON);
@@ -289,7 +293,7 @@ textarea {
 			type : "horizontalBar",
 		    data : 
 		    	{
-				labels : ["XML to JSON"],
+				//labels : ["XML to JSON"],
 				datasets : [ {
 					label : "성공",
 					data : [good_XMLtoJSON],
@@ -326,7 +330,7 @@ textarea {
 			type : "horizontalBar",
 		    data : 
 	    	{
-			labels : ["JSON to XML"],
+			//labels : ["JSON to XML"],
 			datasets : [ {
 				label : "성공",
 				data : [good_JSONtoXML],
@@ -354,6 +358,44 @@ textarea {
 				}
 			}
 		});
+	}
+	
+	
+	
+	function clearXmlConsole(){
+		$("#input-xml").val(" ");
+	}
+	
+	function clearJsonConsole(){
+		$("#input-json").val(" ");
+	}
+	
+	function testXmlValue(){
+		$("#input-xml").val("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"+
+							"<bookstore>\n"+
+								"\t<book category=\"cooking\">\n"+
+									"\t\t<title lang=\"en\">Everyday Italian</title>\n"+
+									"\t\t<author>Giada De Laurentiis</author>\n"+
+									"\t\t<year>2005</year>\n"+
+									"\t\t<price>30</price>\n"+
+								"\t</book>\n"+
+								"\t<book category=\"children\">\n"+
+									"\t\t<title lang=\"en\">Harry Potter</title>\n"+
+									"\t\t<author>J K. Rowling</author>\n"+
+									"\t\t<year>2005</year>\n"+
+									"\t\t<price>29.99</price>\n"+
+								"\t</book>\n"+
+							"</bookstore>\n");
+	}
+	
+	function testJsonValue(){
+		$("#input-json").val("{\n" + 
+								"\t\"books\" : [\n"+
+								"\t\t{ \"language\" : \"java\" , \"edition\" : \"second\" },\n"+
+								"\t\t{ \"language\" : \"C++\" , \"lastName\" : \"third\" },\n"+
+								"\t\t{ \"language\" : \"C\" , \"lastName\" : \"fifth\" }\n"+
+								"\t]\n"+
+							  "}");
 	}
 	
 </script>
