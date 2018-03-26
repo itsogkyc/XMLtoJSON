@@ -66,6 +66,7 @@ public class StaxonUtils {
 			writer.close();
 		} catch (Exception e) {
 			e.printStackTrace();
+			return "Error";	  //에러 발생시 Error 리턴
 		} finally {
 			try {
 				output.close();

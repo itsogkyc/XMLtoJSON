@@ -113,7 +113,7 @@ textarea {
 <script>
 
 	//로컬 호스트
-	var url = "http://localhost:8085/";
+	var url = "http://localhost:8080/";
 	 
 	// 1. XML TO JSON 변환
 	var xml2json = function(_data) {
@@ -124,9 +124,19 @@ textarea {
 			contentType : "application/xml",
 			cache : false,
 			success : function(data) { //통신 성공시   
-				$("#input-json").val(JSON.stringify(data, null, 4));
-				$("#checkValue").html('<font color="blue">유효한 값입니다</font>')
-				  .fadeOut(function() { $("#checkValue").fadeIn(); });
+			
+				if(data.hasOwnProperty("AutoRoot")){
+					//AutoRoot안의 데이터만 남기기 
+					data = data["AutoRoot"];
+					$("#input-json").val(JSON.stringify(data, null, 4));
+					$("#checkValue").html('<font color="orange">유효한 값입니다 (*자동생성된 루트태그 삭제)</font>')
+						.fadeOut(function() { $("#checkValue").fadeIn(); });
+				}else{
+					$("#input-json").val(JSON.stringify(data, null, 4));
+					$("#checkValue").html('<font color="blue">유효한 값입니다</font>')
+						.fadeOut(function() { $("#checkValue").fadeIn(); });
+				}
+				  
 				saveResult("good_XMLtoJSON");
 			},
 			error : function() { //잘못 된 값을 입력할시 
@@ -147,13 +157,20 @@ textarea {
 			cache : false,
 			success : function(data) {
 				var xmlText = new XMLSerializer().serializeToString(data);  //데이어 직렬화
-				//xmlText = xmlText.substring(6,xmlText.lastIndexOf("</DATA>"));  //JSON의 배열값을 처리하기 위해 넣은 DATA태그 삭제
 				xmlText = '<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n' + xmlText;  //xml 프롤로그 추가
 				$("#input-xml").val(xmlText);
-				$("#checkValue").html('<font color="blue">유효한 값입니다</font>')
-				  .fadeOut(function(){ $("#checkValue").fadeIn(); });
-				saveResult("good_JSONtoXML");
 				
+				if(xmlText.indexOf("<AutoRoot>") != -1){
+					$("#checkValue").html('<font color="orange">유효한 값입니다 (*루트 태그 자동생성)</font>')
+					   .fadeOut(function(){ $("#checkValue").fadeIn(); });
+					
+				} else {
+					$("#checkValue").html('<font color="blue">유효한 값입니다</font>')
+					   .fadeOut(function(){ $("#checkValue").fadeIn(); });
+					
+				}
+
+				saveResult("good_JSONtoXML");
 			},
 			error : function() {
 				$("#checkValue").html('<font color="red">유효하지 않은 JSON 값입니다</font>')
