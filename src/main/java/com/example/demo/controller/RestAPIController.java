@@ -62,7 +62,7 @@ public class RestAPIController {
 			    saxParser.parse(stream, handler);
 			    
 			} catch (SAXException e) {
-			    // 유효하지 않은 xml 값일 때 
+			    // json에서 xml로 변환된 값이 유효하지 않은 형식의 xml일때 처리 
 				convertedValue = "<AutoRoot>" + convertedValue + "</AutoRoot>";
 			}
 

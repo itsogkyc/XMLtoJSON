@@ -113,7 +113,7 @@ textarea {
 <script>
 
 	//로컬 호스트
-	var url = "http://localhost:8080/";
+	var url = "http://192.168.23.96:8080/";
 	 
 	// 1. XML TO JSON 변환
 	var xml2json = function(_data) {
@@ -142,6 +142,7 @@ textarea {
 			error : function() { //잘못 된 값을 입력할시 
 				$("#checkValue").html('<font color="red">유효하지 않은 XML 값입니다</font>')
 				  .fadeOut(function() { $("#checkValue").fadeIn(); });
+				$("#input-json").val("");
 				saveResult("bad_XMLtoJSON");
 			}
 		});
@@ -175,6 +176,7 @@ textarea {
 			error : function() {
 				$("#checkValue").html('<font color="red">유효하지 않은 JSON 값입니다</font>')
 				  .fadeOut(function() { $("#checkValue").fadeIn(); });
+				$("#input-xml").val("");
 				saveResult("bad_JSONtoXML");
 			}
 		});
@@ -249,15 +251,22 @@ textarea {
 	
 	//ajax 호출 변환 성공 유무에 따라 통계수치 업데이트
 	function saveResult(value){
+		
+		var isChanged;
+		
 		//호출 유형에 따라 값 증가
 		if(value == "good_XMLtoJSON"){
 			good_XMLtoJSON = good_XMLtoJSON + 1;
+			isChanged = "xml";
 		} else if ( value == "bad_XMLtoJSON" ) {
 			bad_XMLtoJSON = bad_XMLtoJSON + 1;
+			isChanged = "xml";
 		} else if ( value == "good_JSONtoXML" ) {
 			good_JSONtoXML = good_JSONtoXML + 1;
+			isChanged = "json";
 		} else {
 			bad_JSONtoXML = bad_JSONtoXML + 1;
+			isChanged = "json";
 		}
 		
 		//변화한 값 LocalStorage에 저장
@@ -268,14 +277,17 @@ textarea {
 		localStorage.setItem('statisticsValue',JSON.stringify(jsonValue));   
 		
 		//리셋된 결과값 반영
-		$("#XMLtoJSON_chartValue").html("성공 : " + good_XMLtoJSON + " 실패 : " + bad_XMLtoJSON);
-		$("#JSONtoXML_chartValue").html("성공 : " + good_JSONtoXML + " 실패 : " + bad_JSONtoXML);
-		$("#XMLtoJSON_chart").remove();
-		$("#JSONtoXML_chart").remove();
-		$("#xmlChart").append("<canvas id='XMLtoJSON_chart'></canvas>");
-		$("#jsonChart").append("<canvas id='JSONtoXML_chart'></canvas>");
-		loadXmlChart();
-		loadJsonChart();
+		if(isChanged=="xml"){
+			$("#XMLtoJSON_chartValue").html("성공 : " + good_XMLtoJSON + " 실패 : " + bad_XMLtoJSON);
+			$("#XMLtoJSON_chart").remove();
+			$("#xmlChart").append("<canvas id='XMLtoJSON_chart'></canvas>");
+			loadXmlChart();
+		}else{
+			$("#JSONtoXML_chartValue").html("성공 : " + good_JSONtoXML + " 실패 : " + bad_JSONtoXML);
+			$("#JSONtoXML_chart").remove();
+			$("#jsonChart").append("<canvas id='JSONtoXML_chart'></canvas>");
+			loadJsonChart();
+		}
 		
 	}
 	
@@ -304,7 +316,52 @@ textarea {
 	}
 
 	// XML차트
+	// 차트옵션
+	var opt = {
+	    events: false,
+	    tooltips: {
+	        enabled: false
+	    },
+	    hover: {
+	        animationDuration: 0
+	    },
+	    animation: {
+	        duration: 1,
+	        onComplete: function () {
+	            var chartInstance = this.chart,
+	            ctx = chartInstance.ctx;
+                var fontSize = 16;
+                var fontStyle = 'normal';
+                var fontFamily = 'Helvetica Neue';
+                ctx.font = Chart.helpers.fontString(fontSize, fontStyle, fontFamily);
+	            ctx.fillStyle = "#FF0000";
+	            ctx.textAlign = 'center';
+	            ctx.textBaseline = 'bottom';
+	            
+	            this.data.datasets.forEach(function (dataset, i) {
+	                var meta = chartInstance.controller.getDatasetMeta(i);
+	                meta.data.forEach(function (bar, index) {
+	                	var data = dataset.data[index];
+	                	// 0보다 클때만 차트바에 값 표시
+	                	if(data > 0){
+	                		ctx.fillText(data, bar._model.x - 1, bar._model.y +9);
+	                	}
+	                });
+	            });
+	        }
+	    },
+	    scales : {
+			xAxes : [ {
+				ticks : {
+					beginAtZero : true
+				}
+			} ]
+		}
+	};
+	
+	
 	function loadXmlChart(){
+		
 		var ctx = document.getElementById("XMLtoJSON_chart");
 		chart = new Chart(ctx,{
 			type : "horizontalBar",
@@ -328,21 +385,14 @@ textarea {
 					borderWidth : 0
 				}]
 			},
-			options : {
-				scales : {
-					xAxes : [ {
-						ticks : {
-							beginAtZero : true
-						}
-					} ]
-				}
-			}
+			options : opt
 		});
 	}
 	
 	// JSON차트
 	function loadJsonChart(){
 		var ctx = document.getElementById("JSONtoXML_chart");
+		
 		chart = new Chart(ctx,{
 			type : "horizontalBar",
 		    data : 
@@ -365,26 +415,17 @@ textarea {
 				borderWidth : 0
 			}]
 		},
-			options : {
-				scales : {
-					xAxes : [ {
-						ticks : {
-							beginAtZero : true
-						}
-					} ]
-				}
-			}
+			options : opt     
 		});
+		
 	}
 	
-	
-	
 	function clearXmlConsole(){
-		$("#input-xml").val(" ");
+		$("#input-xml").val("");
 	}
 	
 	function clearJsonConsole(){
-		$("#input-json").val(" ");
+		$("#input-json").val("");
 	}
 	
 	function testXmlValue(){
@@ -403,6 +444,7 @@ textarea {
 									"\t\t<price>29.99</price>\n"+
 								"\t</book>\n"+
 							"</bookstore>\n");
+		$("#input-json").val("");
 	}
 	
 	function testJsonValue(){
@@ -413,6 +455,7 @@ textarea {
 								"\t\t{ \"language\" : \"C\" , \"lastName\" : \"fifth\" }\n"+
 								"\t]\n"+
 							  "}");
+		$("#input-xml").val("");
 	}
 	
 </script>
