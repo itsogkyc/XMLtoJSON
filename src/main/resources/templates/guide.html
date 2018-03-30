@@ -230,7 +230,34 @@ textarea {
 		bad_JSONtoXML = output["JSONtoXML"].error * 1;
 	}
 	
+	var statisticsValue = { "XMLtoJSON":{"success":0,"error":0} , "JSONtoXML":{"success":0,"error":0} };
+	
+	function callss(){
+		var ss = { "XMLtoJSON":{"success":0,"error":0} , "JSONtoXML":{"success":0,"error":0} };
+		return ss;
+	}
+	
+	var loadStatusFromH2Engine = function(_data){
+	//$(document).ready(function(){
+		var a = _data;
+		$.ajax({
+			type : "POST",
+			url : url + "status",
+			data : JSON.stringify(a),
+			cache : false,
+			contentType : "application/json",
+			dataType: "json",
+			success : function(data) {
+				console.log(JSON.stringify(data));
+			},
+			error : function(request,status,error) {
+				console.log("에러코드:" + request.status + "\r\n" + "에러메시지:" + request.responseText + "\r\n" + "진짜에러:" + error);
+			}
+		});
+	}
+	
 	$(document).ready(function(){
+		loadStatusFromH2Engine(statisticsValue);  // DB에서 초기값 로드
 		$("#XMLtoJSON_chartValue").html("성공 : " + good_XMLtoJSON + " 실패 : " + bad_XMLtoJSON);
 		$("#JSONtoXML_chartValue").html("성공 : " + good_JSONtoXML + " 실패 : " + bad_JSONtoXML);
 		loadXmlChart();

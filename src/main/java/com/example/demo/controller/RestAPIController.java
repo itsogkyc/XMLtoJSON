@@ -2,11 +2,15 @@ package com.example.demo.controller;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
 import org.json.JSONException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -15,6 +19,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.xml.sax.SAXException;
 
+import com.example.entity.Status;
+import com.example.service.StatusService;
+
 import staxonutils.StaxonUtils;
 import xmlhandler.SaxHandler;
 
@@ -22,10 +29,18 @@ import xmlhandler.SaxHandler;
 @RestController
 public class RestAPIController {
 
+	
+	@Autowired
+	StatusService statusService;
+	
+	Status status = new Status(0,0,0,0);
+	
+	
 	// TODO : XML 데이터 변환
 	@RequestMapping(value = "/xml2json", method = RequestMethod.POST, consumes = "application/xml", produces = "application/json")
 	public ResponseEntity<String> xtoj(HttpServletRequest request, @RequestBody String xml) throws JSONException {
-
+		
+		
 		StaxonUtils stx = new StaxonUtils();
 		String convertedValue = stx.xml2json(xml);
 		
@@ -71,5 +86,16 @@ public class RestAPIController {
 		return new ResponseEntity<String>(convertedValue, HttpStatus.OK);
 
 	}
+	
+	// 통계 데이터 조회
+	@RequestMapping(value = "/status", method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
+	public ResponseEntity<String> status(@RequestBody String json) {
+		
+		System.out.println("들어온 값=>" + json);
+				
+		return new ResponseEntity<String>(json, HttpStatus.OK);
+	}
+	
+	
 
 }
