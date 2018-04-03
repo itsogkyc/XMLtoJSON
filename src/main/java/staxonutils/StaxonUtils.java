@@ -32,19 +32,17 @@ public class StaxonUtils {
 			reader.close();
 			writer.close();
 		} catch (Exception e) {
-			e.printStackTrace();
 			return "Error";	  //에러 발생시 Error 리턴
 		} finally {
 			try {
 				output.close();
 				input.close();
 			} catch (IOException e) {
-				e.printStackTrace();
 			}
 			
 		}
 
-		if (output.toString().length() >= 38) {// remove <?xml version="1.0" encoding="UTF-8"?>
+		if (output.toString().length() >= 38) {   // remove <?xml version="1.0" encoding="UTF-8"?>
 			return output.toString().substring(39);
 		}
 
@@ -65,14 +63,12 @@ public class StaxonUtils {
 			reader.close();
 			writer.close();
 		} catch (Exception e) {
-			e.printStackTrace();
 			return "Error";	  //에러 발생시 Error 리턴
 		} finally {
 			try {
 				output.close();
 				input.close();
 			} catch (IOException e) {
-				e.printStackTrace();
 			}
 		}
 
