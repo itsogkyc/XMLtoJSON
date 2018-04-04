@@ -9,7 +9,6 @@ import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
 import org.json.JSONException;
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +20,6 @@ import org.xml.sax.SAXException;
 
 import com.example.entity.Status;
 import com.example.service.StatusService;
-import com.google.gson.Gson;
 
 import staxonutils.StaxonUtils;
 import xmlhandler.SaxHandler;
@@ -101,7 +99,8 @@ public class RestAPIController {
 			if (countRecord == 0) {
 				status = new Status(0,0,0,0);				
 				statusService.save(status);
-				json = "{ \"XMLtoJSON\":{\"success\":0,\"error\":0} , \"JSONtoXML\":{\"success\":0,\"error\":0} }";
+				json = "{ \"XMLtoJSON\":{\"success\":0,\"error\":0} ," + 
+				        " \"JSONtoXML\":{\"success\":0,\"error\":0} }";
 				return new ResponseEntity<String>(json, HttpStatus.OK);
 
 			} else {
@@ -125,7 +124,8 @@ public class RestAPIController {
 
 			statusService.updateStatusValue(success_xj2, fail_x2j, success_j2x, fail_j2x);
 			
-			json = "{ \"XMLtoJSON\":{\"success\":0,\"error\":0} , \"JSONtoXML\":{\"success\":0,\"error\":0} }";
+			json = "{ \"XMLtoJSON\":{\"success\":0,\"error\":0} ,"+
+					 "\"JSONtoXML\":{\"success\":0,\"error\":0} }";
 			
 			return new ResponseEntity<String>(json, HttpStatus.OK);
 

@@ -32,12 +32,19 @@ public class StaxonUtils {
 			reader.close();
 			writer.close();
 		} catch (Exception e) {
+
+			if(json.equals("null")) {
+				return json="null";
+			}
+			
+			e.printStackTrace();
 			return "Error";	  //에러 발생시 Error 리턴
 		} finally {
 			try {
 				output.close();
 				input.close();
 			} catch (IOException e) {
+				e.printStackTrace();
 			}
 			
 		}
@@ -63,12 +70,14 @@ public class StaxonUtils {
 			reader.close();
 			writer.close();
 		} catch (Exception e) {
+			e.printStackTrace();
 			return "Error";	  //에러 발생시 Error 리턴
 		} finally {
 			try {
 				output.close();
 				input.close();
 			} catch (IOException e) {
+				e.printStackTrace();
 			}
 		}
 
