@@ -36,8 +36,8 @@ API 작동 화면
 -------------
 
 ####  **페이지 구성**
-○ XML , JSON 입력폼
-○ XML , JSON 상화변환이 가능한 버튼
+○ XML , JSON 입력폼, 
+○ XML , JSON 상화변환이 가능한 버튼, 
 ○ 통계결과 조회창
 
 ![enter image description here](https://github.com/itsogkyc/XMLtoJSON/blob/master/img/%EC%9E%91%EB%8F%99%EC%9D%B4%EB%AF%B8%EC%A7%80.png?raw=true)
