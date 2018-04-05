@@ -8,7 +8,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
-import org.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -35,7 +34,7 @@ public class RestAPIController {
 	 * XML to JSON 변환
 	 */
 	@RequestMapping(value = "/xml2json", method = RequestMethod.POST, consumes = "application/xml", produces = "application/json")
-	public ResponseEntity<String> xtoj(HttpServletRequest request, @RequestBody String xml) throws JSONException, Exception {
+	public ResponseEntity<String> xtoj(HttpServletRequest request, @RequestBody String xml) throws Exception {
 
 		StaxonUtils stx = new StaxonUtils();
 		String convertedValue = stx.xml2json(xml);
@@ -51,7 +50,7 @@ public class RestAPIController {
 	 * JSON to XML 변환
 	 */
 	@RequestMapping(value = "/json2xml", method = RequestMethod.POST, consumes = "application/json", produces = "application/xml")
-	public ResponseEntity<String> jtox(HttpServletRequest request, @RequestBody String json) throws JSONException, Exception {
+	public ResponseEntity<String> jtox(HttpServletRequest request, @RequestBody String json) throws Exception {
 
 		StaxonUtils stx = new StaxonUtils();
 		String convertedValue = stx.json2xml(json);
