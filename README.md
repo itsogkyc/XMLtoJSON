@@ -26,10 +26,6 @@ XML <-> JSON 양방향 변환 서비스
 >- 통계값 가독성을 위해 그래프를 사용한 이미지 표시
 
 
-
-
-
-
 ------------
 
 API 작동 화면
@@ -77,7 +73,6 @@ The MIT License (MIT)
 http://www.h2database.com/html/license.html  
 HSQLDB Group  
 H2 is dual licensed and available under the MPL 2.0 (Mozilla Public License Version 2.0) or under the EPL 1.0 (Eclipse Public License).  
-
 
 
 ----------
