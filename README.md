@@ -36,8 +36,8 @@ API 작동 화면
 -------------
 
 ####  **페이지 구성**
-○ XML , JSON 입력폼, 
-○ XML , JSON 상화변환이 가능한 버튼, 
+○ XML , JSON 입력폼
+○ XML , JSON 상화변환이 가능한 버튼
 ○ 통계결과 조회창
 
 ![enter image description here](https://github.com/itsogkyc/XMLtoJSON/blob/master/img/%EC%9E%91%EB%8F%99%EC%9D%B4%EB%AF%B8%EC%A7%80.png?raw=true)
@@ -46,10 +46,41 @@ API 작동 화면
 ----------
 
 ### License
-본 프로젝트 개발에 staxon 이라는 오픈소스가 사용되었고, 해당 라이센스는 아래와 같습니다.
+본 프로젝트 개발에 사용된 오픈소스와 라이센스는 아래와 같습니다.
 
-StAXON is available under the Apache License, Version 2.0.
-(c) 2011, 2012 Odysseus Software
+**StAXON - JSON via StAX**
+https://github.com/beckchr/staxon
+Copyright (c) 2011, 2012 Odysseus Software
+Apache License, Version 2.0.
+
+**Tomcat7**
+http://tomcat.apache.org/maven-plugin-2.2/tomcat7-maven-plugin/license.html
+Copyright (c)  2005–2013 The Apache Software Foundation. All rights reserved.
+Apache License, Version 2.0.
+
+**Chart.js**
+https://github.com/chartjs/Chart.js/blob/master/LICENSE.md
+Copyright (c) 2018 Chart.js Contributors
+The MIT License (MIT)
+
+**bootstrap**
+copyright 2018 Twitter
+https://getbootstrap.com/docs/4.0/about/license/
+The MIT License (MIT)
+
+**jQuery**
+https://jquery.org/license/
+Copyright 2018 The jQuery Foundation
+The MIT License (MIT)
+
+**H2 database**
+http://www.h2database.com/html/license.html
+HSQLDB Group
+H2 is dual licensed and available under the MPL 2.0 (Mozilla Public License Version 2.0) or under the EPL 1.0 (Eclipse Public License).
+
+
+
+----------
 
 
 ### 문의사항
