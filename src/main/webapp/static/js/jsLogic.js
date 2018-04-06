@@ -1,6 +1,6 @@
 
 	//로컬 호스트
-	var url = "http://192.168.23.96:8080/";
+	var url = "http://localhost:8080/";
 	 
 	// 1. XML TO JSON 변환
 	var xml2json = function(_data) {
